@@ -111,7 +111,7 @@ class TwitterAPIExchange
     {
         if (!is_null($this->getGetfield()))
         {
-            throw new Exception('You can only choose get OR post fields.');
+            throw new Exception('You can only choose get OR post fields (post fields include put).');
         }
 
         if (isset($array['status']) && substr($array['status'], 0, 1) === '@')
@@ -130,7 +130,8 @@ class TwitterAPIExchange
         $this->postfields = $array;
 
         // rebuild oAuth
-        if (isset($this->oauth['oauth_signature'])) {
+        if (isset($this->oauth['oauth_signature']))
+        {
             $this->buildOauth($this->url, $this->requestMethod);
         }
 
@@ -203,9 +204,9 @@ class TwitterAPIExchange
      */
     public function buildOauth($url, $requestMethod)
     {
-        if (!in_array(strtolower($requestMethod), array('post', 'get')))
+        if (!in_array(strtolower($requestMethod), array('post', 'get', 'put')))
         {
-            throw new Exception('Request method must be either POST or GET');
+            throw new Exception('Request method must be either POST, GET or PUT');
         }
 
         $consumer_key              = $this->consumer_key;
